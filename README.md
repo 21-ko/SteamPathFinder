@@ -1,5 +1,5 @@
 # SteamPathFinder
-A utility module for finding Steam paths
+A utility module for finding Steam paths<BR>
 https://pypi.org/project/SteamPathFinder/
 
 
