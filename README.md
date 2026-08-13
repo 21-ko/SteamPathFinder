@@ -33,34 +33,17 @@ pip install SteamPathFinder
 ## Basic usage
 
 ```python
-from SteamPathFinder import get_app_path, get_game_path, get_steam_path
+from SteamPathFinder import get_game_path
 
 
-steam_path = get_steam_path()
-print("Steam client data:", steam_path)
-
-app_id = "1998340"
-
-# The Steam library containing the application. This can be an internal drive,
-# an external drive, or a Steam Deck microSD card.
-library_path = get_app_path(steam_path, app_id)
-print("Steam library:", library_path)
-
-# The folder name is read from appmanifest_<app_id>.acf. This avoids
-# case-sensitivity problems on Linux.
-game_path = get_game_path(steam_path, app_id)
+game_path = get_game_path("1998340")
 print("Game path:", game_path)
 ```
 
-Passing the game folder name remains supported for compatibility:
-
-```python
-game_path = get_game_path(
-    steam_path,
-    "1998340",
-    "Labyrinth of Galleria The Moon Society",
-)
-```
+`get_game_path()` automatically finds Steam, locates the library containing the
+app ID, and reads the exact folder name from `appmanifest_<app_id>.acf`. No
+Steam path or game folder name is required. This also avoids case-sensitivity
+problems on Linux.
 
 ## Steam path discovery
 

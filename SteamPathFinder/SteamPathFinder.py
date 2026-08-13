@@ -233,15 +233,12 @@ def _get_manifest_install_dir(library_path, app_id):
     return install_dir
 
 
-def get_game_path(steam_path, app_id, game_name=None):
-    """Return a game's install directory, deriving its name from the manifest."""
+def get_game_path(app_id):
+    """Return a game's install directory using only its Steam app ID."""
     app_id = str(app_id)
+    steam_path = get_steam_path()
     app_path = get_app_path(steam_path, app_id)
-
-    if game_name is None:
-        game_name = _get_manifest_install_dir(app_path, app_id)
-    elif not isinstance(game_name, str) or not game_name:
-        raise ValueError("ERROR: game_name must be a non-empty string.")
+    game_name = _get_manifest_install_dir(app_path, app_id)
 
     game_path = os.path.join(app_path, "steamapps", "common", game_name)
 

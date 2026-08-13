@@ -190,39 +190,17 @@ class SteamPathFinderTests(unittest.TestCase):
             ) as file:
                 file.write(manifest)
 
-            self.assertEqual(
-                finder.get_game_path(steam_root, "1998340"),
-                os.path.realpath(game_path),
-            )
+            with mock.patch.dict(
+                os.environ, {"STEAM_PATH": steam_root}, clear=True
+            ):
+                self.assertEqual(
+                    finder.get_game_path("1998340"),
+                    os.path.realpath(game_path),
+                )
 
-    def test_game_path_keeps_explicit_name_compatibility(self):
-        with tempfile.TemporaryDirectory() as steam_root:
-            steamapps = os.path.join(steam_root, "steamapps")
-            game_name = "Legacy Folder Name"
-            game_path = os.path.join(steamapps, "common", game_name)
-            os.makedirs(game_path)
-
-            library_vdf = (
-                LIBRARY_VDF_HEADER
-                + '    "0"\n    {\n'
-                + '        "path" "{}"\n'.format(escape_vdf(steam_root))
-                + '        "apps"\n        {\n'
-                + '            "7" "1"\n'
-                + "        }\n"
-                + "    }\n"
-                + "}\n"
-            )
-            with open(
-                os.path.join(steamapps, "libraryfolders.vdf"),
-                "w",
-                encoding="utf-8",
-            ) as file:
-                file.write(library_vdf)
-
-            self.assertEqual(
-                finder.get_game_path(steam_root, "7", game_name),
-                os.path.realpath(game_path),
-            )
+    def test_game_path_rejects_the_old_multi_argument_api(self):
+        with self.assertRaises(TypeError):
+            finder.get_game_path("/path/to/Steam", "1998340")
 
 
 if __name__ == "__main__":
